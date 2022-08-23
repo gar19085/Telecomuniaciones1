@@ -177,24 +177,24 @@ class Ui_Dialog(object):
             if len(i["path"])>2:
                 for J in i["path"]:
                     T3 = []
-                    #if J == int(ASEspecifico):
-                        #T = data['initial_state'].index(i)
+                    if J == int(ASEspecifico):
+                        T = data['initial_state'].index(i)
                 
                     #Cblue = ['blue']*len(data["initial_state"][J]["path"])
                 
                         #for H in data["events"][T]["attrs"]["path"]:
-                    for H in i["path"]:
-                        T3.append(str(H))
-                        if H == int(ASEspecifico):
-                            G3.add_node(H, label = str(ASEspecifico), color= 'red')
-                    origen = T3[-1]
-                    if H == int(origen):
-                        G3.add_node(H, label = str(origen), color= 'green') 
+                        for H in data["initial_state"][T]["path"]:
+                            T3.append(str(H))
+                            if H == int(ASEspecifico):
+                                G3.add_node(H, label = str(ASEspecifico), color= 'red')
+                        origen = T3[-1]
+                        if H == int(origen):
+                            G3.add_node(H, label = str(origen), color= 'green') 
                             
-                    G3.add_nodes(i["path"], label = T3)  
-                    for n in range(1, len(i["path"])):
-                        if(i["path"][n]!=i["path"][n-1]):
-                            G3.add_edge(i["path"][n], i["path"][n-1], color = 'black')
+                        G3.add_nodes(data["initial_state"][T]["path"], label = T3)  
+                        for n in range(1, len(data["initial_state"][T]["path"])):
+                            if(data["initial_state"][T]["path"][n]!=data["initial_state"][T]["path"][n-1]):
+                                G3.add_edge(data["initial_state"][T]["path"][n], data["initial_state"][T]["path"][n-1], color = 'black')
         
         G3.show('prueba3.html')
         archtml = open("prueba3.html", "r")
