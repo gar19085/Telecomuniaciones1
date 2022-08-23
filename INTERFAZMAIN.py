@@ -157,7 +157,7 @@ class Ui_Dialog(object):
         ET = self.ETinput.text()
         ASEspecifico = self.ASNinput.text()
         G2 = Network('1000px', '1000px', notebook = True)
-        resp = 'https://stat.ripe.net/data/bgplay/data.json?resource={}&starttime={}&endtime{}'.format(IP,ST,ET)
+        resp = 'https://stat.ripe.net/data/bgplay/data.json?resource={}&starttime={}&endtime={}'.format(IP,ST,ET)
         response = requests.get(resp)
         R = response.json()
         data = R["data"]
