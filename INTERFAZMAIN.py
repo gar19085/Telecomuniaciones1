@@ -42,6 +42,7 @@ class Ui_Dialog(object):
         
         self.ConslGeneral.clicked.connect(self.PAGE1GENERAL)
         self.ConslGeneral.clicked.connect(self.PAGE2EVENTOS)
+        self.ConslGeneral.clicked.connect(self.PAGE3EVENTOS)
         
         #Graficar Eventos
         #self.GenGrafica = QtWidgets.QPushButton(Dialog)
@@ -96,10 +97,15 @@ class Ui_Dialog(object):
         self.tabWidgetTREEPage1 = QtWidgets.QWidget()
         self.tabWidgetTREEPage1.setObjectName("tabWidgetTREEPage1")
         self.tabWidgetTREEPage1 = QtWebEngineWidgets.QWebEngineView()
-        
+        self.tabWidgetTREE.addTab(self.tabWidgetTREEPage1, "")
         
         #Widget pagina 2
-        self.tabWidgetTREE.addTab(self.tabWidgetTREEPage1, "")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.tab = QtWebEngineWidgets.QWebEngineView()
+        self.tabWidgetTREE.addTab(self.tab, "")
+        
+        #Widget pagina 3
         self.tabWidgetTREEPage2 = QtWidgets.QWidget()
         self.tabWidgetTREEPage2.setObjectName("tabWidgetTREEPage2")
         self.tabWidgetTREEPage2 = QtWebEngineWidgets.QWebEngineView()
@@ -139,9 +145,9 @@ class Ui_Dialog(object):
                     if L == int(origen):
                         g.add_node(L, label = str(origen), color= 'green')  
                                         
-                    for N in j['routes'][0]['as_path']:
-                        M.append(str(N))
-                    g.add_nodes(j['routes'][0]['as_path'], label = M)
+                    #for N in j['routes'][0]['as_path']:
+                        #M.append(str(N))
+                    g.add_nodes(j['routes'][0]['as_path'], label = T1)
                     for n in range(1, len(j['routes'][0]['as_path'])):
                             if(j['routes'][0]['as_path'][n]!=j['routes'][0]['as_path'][n-1]):
                                     g.add_edge(j['routes'][0]['as_path'][n], j['routes'][0]['as_path'][n-1])
@@ -153,8 +159,51 @@ class Ui_Dialog(object):
         for i in archtml.readlines():
             html = html + i
         self.tabWidgetTREEPage1.setHtml(html)
-
+        
     def PAGE2EVENTOS(self):
+        IP = self.IPinput.text()
+        ST = self.STinput.text()
+        ET = self.ETinput.text()
+        ASEspecifico = self.ASNinput.text()
+        G3 = Network('1000px', '1000px', notebook = True)
+        resp3 = 'https://stat.ripe.net/data/bgplay/data.json?resource={}&starttime={}&endtime={}'.format(IP,ST,ET)
+        response = requests.get(resp3)
+        R = response.json()
+        data = R["data"]
+        #print(data['query_starttime'])
+        #print(data['query_endtime'])
+
+        for i in data["initial_state"]:
+            if len(i["path"])>2:
+                for J in i["path"]:
+                    T3 = []
+                    #if J == int(ASEspecifico):
+                        #T = data['initial_state'].index(i)
+                
+                    #Cblue = ['blue']*len(data["initial_state"][J]["path"])
+                
+                        #for H in data["events"][T]["attrs"]["path"]:
+                    for H in i["path"]:
+                        T3.append(str(H))
+                        if H == int(ASEspecifico):
+                            G3.add_node(H, label = str(ASEspecifico), color= 'red')
+                    origen = T3[-1]
+                    if H == int(origen):
+                        G3.add_node(H, label = str(origen), color= 'green') 
+                            
+                    G3.add_nodes(i["path"], label = T3)  
+                    for n in range(1, len(i["path"])):
+                        if(i["path"][n]!=i["path"][n-1]):
+                            G3.add_edge(i["path"][n], i["path"][n-1], color = 'black')
+        
+        G3.show('prueba3.html')
+        archtml = open("prueba3.html", "r")
+        html = ""
+        for i in archtml.readlines():
+            html = html + i
+        self.tab.setHtml(html)
+        
+    def PAGE3EVENTOS(self):
         IP = self.IPinput.text()
         ST = self.STinput.text()
         ET = self.ETinput.text()
@@ -207,6 +256,7 @@ class Ui_Dialog(object):
         self.plainTextEdit.setPlainText(_translate("Dialog", "Usar el siguiente formato para el Tiempo:\n"
 "AA-MM-DDT00:00"))
         self.tabWidgetTREE.setTabText(self.tabWidgetTREE.indexOf(self.tabWidgetTREEPage1), _translate("Dialog", "General"))
+        self.tabWidgetTREE.setTabText(self.tabWidgetTREE.indexOf(self.tab), _translate("Dialog", "Estado Inicial"))
         self.tabWidgetTREE.setTabText(self.tabWidgetTREE.indexOf(self.tabWidgetTREEPage2), _translate("Dialog", "Eventos"))
         self.label_5.setText(_translate("Dialog", "ASN Especifico"))
 
