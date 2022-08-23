@@ -128,14 +128,17 @@ class Ui_Dialog(object):
 
         for i in data["peerings"]:
             for j in i["peers"]:
+                T1 = []
                 if len(j["routes"])!=0:
                     M = []
                     for L in j['routes'][0]['as_path']:
-                            if L == 52362:
-                                    g.add_node(L, label = '52362', color= 'green')  
-                            if L == int(ASEspecifico):
-                                    g.add_node(L, label = str(ASEspecifico), color= 'red')
-                                    
+                        T1.append(str(L))            
+                        if L == int(ASEspecifico):
+                            g.add_node(L, label = str(ASEspecifico), color= 'red')
+                    origen = T1[-1]
+                    if L == int(origen):
+                        g.add_node(L, label = str(origen), color= 'green')  
+                                        
                     for N in j['routes'][0]['as_path']:
                         M.append(str(N))
                     g.add_nodes(j['routes'][0]['as_path'], label = M)
@@ -176,8 +179,9 @@ class Ui_Dialog(object):
                 
                         for H in data["events"][T]["attrs"]["path"]:
                             T2.append(str(H))
-                        if H == 52362:
-                            G2.add_node(H, label = '52362', color= 'green') 
+                        origen = T2[-1]
+                        if H == int(origen):
+                            G2.add_node(H, label = str(origen), color= 'green') 
                         if J == int(ASEspecifico):
                             G2.add_node(J, label = str(ASEspecifico), color= 'red')
                             
